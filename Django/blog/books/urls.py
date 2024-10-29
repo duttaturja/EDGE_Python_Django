@@ -16,5 +16,5 @@ urlpatterns = [
     path('user/profile/', user_views.profile_view, name='profile'),
     path('books_rest/', APIBook.as_view(), name='book_list_create'),
     path('rest/book/<int:pk>', BookGetUpdateDelete.as_view(), name='rest_book'),
-    #path('authors_rest/' )
+    path('authors_rest/', APIAuthor.as_view(), name='author_list_create'),
 ]
