@@ -7,10 +7,11 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 #from rest_framework
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 # from books
 from books.models import Book, Author, Publisher
@@ -60,14 +61,16 @@ class BookCreateView(PermissionRequiredMixin, CreateView):
 
 #Rest_Frameworks API's
 class APIBook(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
+        print(request.user)
         books = Book.objects.all()
         serializer = BookSerializer(books, many = True)
         data = serializer.data
         return Response(data, status=status.HTTP_200_OK)
     
     def post(self, request):
-        
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
