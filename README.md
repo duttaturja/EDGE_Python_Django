@@ -9,7 +9,7 @@ This repository contains all the things I learned from EDGE-Skill-Training CUET 
 ## 🛠️ Technology Stack
 
 - **Backend**: Django (Python)
-- **Frontend**: HTML, CSS (Bootstrap/Tailwind optional)
+- **Frontend**: HTML
 - **Database**: SQLite (default), can be configured to use PostgreSQL, MySQL, etc.
 - **Environment Management**: Virtualenv
 
