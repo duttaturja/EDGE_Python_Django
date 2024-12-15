@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 #from rest_framework
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework import status, permissions
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -29,6 +29,10 @@ class BookListView(ListView):
     template_name = 'book_list.html'
     context_object_name = 'books'
 
+class BooklListAPIView(ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
 class ContactFormView(FormView):
     template_name = 'contact.html'
     form_class = ContactForm
@@ -38,25 +42,26 @@ class ContactFormView(FormView):
         return super().form_valid(form)
     
 
-class BookCreateView(PermissionRequiredMixin, CreateView):
+class BookCreateView(CreateView):
     model = Book                                # Model name to add new book details   
     form_class = BookForm                       # Form class to validate the form
-    template_name = 'books/book_form.html'      # Template name to render the form
+    template_name = 'book_form.html'      # Template name to render the form
     success_url = reverse_lazy('book_list')     # Success url to redirect after form submission
-    permission_required = 'books.can_add_books' # Permission required to add new book details
+    # permission_required = 'books.can_add_books' # Permission required to add new book details
     
-    def handle_no_permission(self):
-        """
-            To add permission to user:
-            from django.contrib.auth.models import Permission, User
-            user = User.objects.get(username="duttaturja")
-            permission = Permission.objects.get(codename="can_add_books")
-            user.user_permissions.add(permission)
-        """
-        return HttpResponseForbidden("You do not have permission to add a book.")
-    # Show http response after form validation
-    def form_valid(self, form) -> HttpResponse:
-        return super().form_valid(form)
+    # def handle_no_permission(self):
+    #     """
+    #         To add permission to user:
+    #         from django.contrib.auth.models import Permission, User
+    #         user = User.objects.get(username="duttaturja")
+    #         permission = Permission.objects.get(codename="can_add_books")
+    #         user.user_permissions.add(permission)
+    #     """
+    #     return HttpResponseForbidden("You do not have permission to add a book.")
+    # # Show http response after form validation
+    # def form_valid(self, form) -> HttpResponse:
+    #     return super().form_valid(form)
+    
     
 
 #Rest_Frameworks API's

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'user',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'django_redis',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'books.middleware.CacheGETMiddleware',
 ]
 
 ROOT_URLCONF = 'blog.urls'
@@ -140,6 +142,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 #simple-JWT settings
@@ -150,3 +154,19 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'TOKEN_OBTAIN_SERIALIZER' : 'user.serializers.CustomClaimTokenObtainSerializer',
 }
+
+#Cache backend using Redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS' : {
+            'CLIENT_CLASS' : 'django_redis.client.DefaultClient',
+        },
+        'KEY_PREFIX' : 'blog'
+    }
+}
+
+#Session caching (optional)
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
